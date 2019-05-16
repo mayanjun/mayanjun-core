@@ -24,7 +24,7 @@
     </developers>
 
     <scm>
-        <url>https://github.com/mayanjun/core.git</url>
+        <url>http://mayanjun.org</url>
         <connection>https://github.com/mayanjun/core.git</connection>
         <developerConnection>https://github.com/mayanjun</developerConnection>
     </scm>
@@ -81,14 +81,14 @@
     </build>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
-            <id>oss</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>rdc-releases</id>
+            <url>https://repo.rdc.aliyun.com/repository/73133-release-22pN4I/</url>
         </repository>
+        <snapshotRepository>
+            <id>rdc-snapshots</id>
+            <url>https://repo.rdc.aliyun.com/repository/73133-snapshot-0I8q8M/</url>
+        </snapshotRepository>
     </distributionManagement>
 
 
