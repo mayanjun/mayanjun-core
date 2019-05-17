@@ -1,4 +1,4 @@
-package org.mayanjun.bean;
+package org.mayanjun.core;
 
 /**
  * @author mayanjun

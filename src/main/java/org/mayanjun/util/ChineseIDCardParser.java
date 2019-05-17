@@ -1,25 +1,29 @@
 package org.mayanjun.util;
 
-import org.apache.commons.lang3.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
-import org.mayanjun.bean.IDCard;
 import org.mayanjun.core.Assert;
+import org.mayanjun.core.Message;
 import org.mayanjun.core.ServiceException;
-import org.mayanjun.enums.Gender;
+import org.mayanjun.core.Status;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
-import static org.mayanjun.bean.IDCard.*;
 
 /**
  * Chinese ID card validator
  * @author mayanjun
  * @since 22/02/2018
  */
-public class ChineseIDCardParser extends AbstractParser<String, IDCard> {
+public class ChineseIDCardParser extends AbstractParser<String, ChineseIDCardParser.IDCard> {
+
+    public static Status CODE_NUMBER_EMPTY = new Status(2018001, "身份证号为空");
+    public static Status CODE_NUMBER_ERROR = new Status(2018002, "身份证号错误");
+    public static Status CODE_BIRTHDATE_ERROR = new Status(2018003, "出生日期错误");
+    public static Status CODE_PROVINCE_ERROR = new Status(2018004, "地区编码错误");
+    public static Status CODE_CHECKSUM_ERROR = new Status(2018005, "身份证无效，最后一位错误");
 
     private static Map<String, String> PROVINCE_CODES = new HashMap<String, String>();
 
@@ -55,7 +59,7 @@ public class ChineseIDCardParser extends AbstractParser<String, IDCard> {
             throw new ServiceException(CODE_NUMBER_ERROR, "号码长度应该为15位或18位,您的身份证号码为" + id.length() + "位");
         }
 
-        Assert.isTrue(StringUtils.isNumeric(ai), CODE_NUMBER_ERROR, "15位号码都应为数字; 18位号码除最后一位外，都应为数字");
+        Assert.isTrue(Strings.isNumeric(ai), CODE_NUMBER_ERROR, "15位号码都应为数字; 18位号码除最后一位外，都应为数字");
 
         String birthdateString = ai.substring(6, 14);
 
@@ -81,5 +85,124 @@ public class ChineseIDCardParser extends AbstractParser<String, IDCard> {
         int sexInt = Integer.parseInt(sexInfo.toString());
         Gender gender = sexInt % 2 == 0 ? Gender.FEMALE : Gender.MALE;
         return new IDCard(id, gender, province, provinceCode, generation, birthdate.toDate(), ai);
+    }
+
+    /**
+     * Represents an Id card
+     *
+     * @author mayanjun
+     */
+    public static class IDCard extends Message {
+
+        private String number;
+        private Gender gender;
+        private String province;
+        private String provinceCode;
+        private int generation;
+        private Date birthdate;
+        private String number2;
+
+        public IDCard() {
+            super(Status.OK.getCode(), "OK");
+        }
+
+        public IDCard(int code) {
+            super(code, "");
+        }
+
+        public IDCard(String number, Gender gender, String province, String provinceCode, int generation, Date birthdate, String number2) {
+            super(Status.OK.getCode(), "OK");
+            this.number = number;
+            this.gender = gender;
+            this.province = province;
+            this.provinceCode = provinceCode;
+            this.generation = generation;
+            this.birthdate = birthdate;
+            this.number2 = number2;
+        }
+
+        public String getIDCardNumber() {
+            return number;
+        }
+
+        public String getProvince() {
+            return province;
+        }
+
+        public String getProvinceCode() {
+            return provinceCode;
+        }
+
+        public int getGeneration() {
+            return generation;
+        }
+
+        public Date getBirthdate() {
+            return birthdate;
+        }
+
+        public String getNumber2() {
+            return number2;
+        }
+
+        public String getNumber() {
+            return number;
+        }
+
+        public void setNumber(String number) {
+            this.number = number;
+        }
+
+        public void setProvince(String province) {
+            this.province = province;
+        }
+
+        public void setProvinceCode(String provinceCode) {
+            this.provinceCode = provinceCode;
+        }
+
+        public void setGeneration(int generation) {
+            this.generation = generation;
+        }
+
+        public void setBirthdate(Date birthdate) {
+            this.birthdate = birthdate;
+        }
+
+        public void setNumber2(String number2) {
+            this.number2 = number2;
+        }
+
+        public Gender getGender() {
+            return gender;
+        }
+
+        public void setGender(Gender gender) {
+            this.gender = gender;
+        }
+
+        @Override
+        public String toString() {
+            return "IDCard{" +
+                    "number='" + number + '\'' +
+                    ", gender=" + gender +
+                    ", province='" + province + '\'' +
+                    ", provinceCode='" + provinceCode + '\'' +
+                    ", generation=" + generation +
+                    ", birthdate=" + birthdate +
+                    ", number2='" + number2 + '\'' +
+                    '}';
+        }
+    }
+
+    /**
+     * @author mayanjun
+     * @since 2018/7/6
+     */
+    public static enum Gender {
+
+        UNKNOWN,
+        MALE,
+        FEMALE
     }
 }
