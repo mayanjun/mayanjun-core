@@ -6,7 +6,7 @@
 
     <groupId>org.mayanjun</groupId>
     <artifactId>core</artifactId>
-    <version>0.0.1.alpha</version>
+    <version>0.0.1.RELEASE</version>
 
     <name>mayanjun-core</name>
     <description>core library</description>
